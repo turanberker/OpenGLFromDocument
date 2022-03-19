@@ -146,11 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Depandencies\GLAD\src\glad.c" />
-    <ClCompile Include="src\headers\Point.cpp" />
     <ClCompile Include="src\App.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\headers\Point.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
