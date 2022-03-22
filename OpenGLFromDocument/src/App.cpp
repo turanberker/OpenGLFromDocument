@@ -18,20 +18,21 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 }
 const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"out vec4 vertexColor;"
+"layout (location = 0) in vec2 aPos;\n"
+"layout (location = 1) in vec3 aColor;\n"
+"out vec3 ourColor;"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"	vertexColor =vec4(0.5,0.0,0.0,1.0);"
+"   gl_Position = vec4(aPos,0.0, 1.0);\n"
+"	ourColor = aColor;"
 "}\0";
 
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
-"uniform vec4 ourColor;"
+"in vec3 ourColor;"
 "void main()\n"
 "{\n"
-"   FragColor = ourColor;\n"
+"   FragColor = vec4(ourColor,1.0);\n"
 "}\n\0";
 
 int main(void) {
@@ -95,9 +96,9 @@ int main(void) {
 
 
 	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // sol alt
-		0.5f, -0.5f, 0.0f, // bottom right
-		0.0f, 0.5f, 0.0f // bottom left
+		-0.5f, -0.5f, 1.0f,0.0f,0.0f, // sol alt
+		0.5f, -0.5f,0.0f,1.0f,0.0f, // bottom right
+		0.0f, 0.5f,0.0f,0.0f,1.0f // bottom left
 		
 	};
 
@@ -120,9 +121,12 @@ int main(void) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	//set the vertex attrivbutes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),(void*)(2 *sizeof(float)));
+	glEnableVertexAttribArray(1);
 	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -135,9 +139,9 @@ int main(void) {
 		// draw our first triangle
 		float timeValue = glfwGetTime();
 		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-		int vertexVolorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+		int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
 		glUseProgram(shaderProgram);
-		glUniform4f(vertexVolorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 		
 		
 		glBindVertexArray(VAO);
