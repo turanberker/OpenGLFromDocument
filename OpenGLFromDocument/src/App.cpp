@@ -94,7 +94,7 @@ int main(void) {
 		float timeValue = glfwGetTime();
 		float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
 		
-		ourShader.setFloat("xOffset", xOffSet);		
+		//ourShader.setFloat("xOffset", xOffSet);		
 		ourShader.setFloat("someUniform", greenValue);
 		ourShader.use();
 		if (xOffSet >= 1.5f) {
