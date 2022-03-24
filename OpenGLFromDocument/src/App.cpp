@@ -94,8 +94,6 @@ int main(void) {
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
-	
-
 	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
 	// -------------------------------------------------------------------------------------------
 	ourShader.use(); // don't forget to activate/use the shader before setting uniforms!
@@ -122,11 +120,6 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		ourTexture.use();
-		/*glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture1);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texture2);
-	*/
 		// render container
 		ourShader.use();
 		
