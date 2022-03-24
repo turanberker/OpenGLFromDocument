@@ -25,6 +25,7 @@ void processInput(GLFWwindow* window)
 
 
 int main(void) {
+	const int numberOfTextures = 2;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -49,7 +50,9 @@ int main(void) {
 
 
 	Shader ourShader("resources/shaders/texture.vs", "resources/shaders/texture.fs");
-	Texture ourTexture("resources/textures/container.jpg");
+	Texture ourTexture(numberOfTextures);
+	ourTexture.bindTexture("resources/textures/container.jpg",false);
+	ourTexture.bindTexture("resources/textures/awesomeface.png",true);	
 	
 
 	float vertices[] = {
@@ -79,17 +82,32 @@ int main(void) {
 	//copy our index array in a element buffer for OpenGL to use
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	
 	//set the vertex attrivbutes pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
 	// color attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),(void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 	
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	
+
+	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
+	// -------------------------------------------------------------------------------------------
+	ourShader.use(); // don't forget to activate/use the shader before setting uniforms!
+	// either set it manually like so:
+	for (int i = 0; i < numberOfTextures; i++) {
+		std::string texture= "texture";
+		texture = texture +std::to_string(i + 1);
+		ourShader.setInt(texture, i);
+	}
+	// or set it via the texture class
+	
+
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -102,14 +120,20 @@ int main(void) {
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
-	
+		
+		ourTexture.use();
+		/*glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texture2);
+	*/
 		// render container
 		ourShader.use();
-		ourTexture.use();
+		
 		glBindVertexArray(VAO);
+		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+		glBindVertexArray(0);
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);

@@ -1,7 +1,2 @@
-﻿  App.cpp
-D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(6,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  The contents of <filesystem> are available only with C++17 or later.
-D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+﻿  Texture.cpp
   OpenGLFromDocument.vcxproj -> D:\work\workspaces\opengl\OpenGLFromDocument\x64\Debug\OpenGLFromDocument.exe

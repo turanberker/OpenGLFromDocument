@@ -166,7 +166,10 @@
     <ClInclude Include="src\header\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\textures\awesomeface.png" />
+    <Image Include="resources\textures\Cat.jpg" />
     <Image Include="resources\textures\container.jpg" />
+    <Image Include="resources\textures\leopard.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
