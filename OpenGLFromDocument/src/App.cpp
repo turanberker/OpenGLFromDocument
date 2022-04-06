@@ -133,21 +133,17 @@ int main(void) {
 	}
 	// or set it via the texture class
 	
-
-/*	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
 	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
-	vec = trans * vec;
-	cout << vec.x << "--" << vec.y << "--" << vec.z << endl;*/
+	float angle = (float)glfwGetTime();
+	trans = glm::rotate(trans, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	
-/*	
- glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-	*/
+	glm::mat4 view = glm::mat4(1.0f);
+	// note that we’re translating the scene in the reverse direction
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 	
-	
+	glm::mat4 projection;
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f,100.0f);
+
 	float x = 0.0;
 	float y = 0.0;
 	// render loop
@@ -156,10 +152,8 @@ int main(void) {
 	{
 
 		determineX(window, x,y);
-		glm::mat4 trans = glm::mat4(1.0f);
-	//	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-		float angle=(float)glfwGetTime();
-		trans = glm::rotate(trans, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+		
+	
 		glm::mat4 itr = glm::mat4(1.0f);
 		itr=glm::translate(itr, glm::vec3(x, y, 0.0f));
 		// input
@@ -174,7 +168,8 @@ int main(void) {
 		ourTexture.use();
 		ourShader.setMat4fv("rotation", false ,trans);
 		ourShader.setMat4fv("iteration", false, itr);
-				
+		ourShader.setMat4fv("view", false, view);
+		ourShader.setMat4fv("projection", false, projection);
 		// render container
 		//ourShader.use();
 		
