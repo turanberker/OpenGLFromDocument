@@ -1,4 +1,5 @@
 #include "Shader.h";
+#include <gtc/type_ptr.hpp>
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	// 1. retrieve the vertex/fragment source code from filePath
@@ -82,6 +83,10 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	glDeleteShader(fragment);
 }
 
+unsigned int Shader::getId() {
+	return ID;
+}
+
 void Shader::use()
 {
 	glUseProgram(ID);
@@ -97,4 +102,9 @@ void Shader::setInt(const std::string& name, int value) const
 void Shader::setFloat(const std::string& name, float value) const
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shader::setMat4fv(const std::string& name, bool transposeMatrix, glm::mat4 &mat4) const
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, transposeMatrix?GL_TRUE: GL_FALSE, glm::value_ptr(mat4));
 }

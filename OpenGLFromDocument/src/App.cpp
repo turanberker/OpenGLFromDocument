@@ -5,7 +5,9 @@
 #include <string>
 #include "header/Shader.h";
 #include "header/Log.h";
-
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 #include "header/stb_image.h";
 #include "header/Texture.h";
 
@@ -23,8 +25,34 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 }
 
+void determineX(GLFWwindow* window, float& x , float& y) {
+	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		x -= 0.005f;
+	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		x +=  0.005f;
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		y += 0.005f;
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		y -= 0.005f;
+
+	if (x > 0.5) {
+		x = 0.5;
+	}	else if (x < -0.5) {
+		x = -0.5;
+	}
+
+	if (y > 0.5) {
+		y = 0.5;
+	}
+	else if (y < -0.5) {
+		y = -0.5;
+	}
+}
 
 int main(void) {
+
+
+
 	const int numberOfTextures = 2;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -106,10 +134,34 @@ int main(void) {
 	// or set it via the texture class
 	
 
+/*	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+	vec = trans * vec;
+	cout << vec.x << "--" << vec.y << "--" << vec.z << endl;*/
+	
+/*	
+ glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+	trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+	*/
+	
+	
+	float x = 0.0;
+	float y = 0.0;
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
+
+		determineX(window, x,y);
+		glm::mat4 trans = glm::mat4(1.0f);
+	//	trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		float angle=(float)glfwGetTime();
+		trans = glm::rotate(trans, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 itr = glm::mat4(1.0f);
+		itr=glm::translate(itr, glm::vec3(x, y, 0.0f));
 		// input
 		// -----
 		processInput(window);
@@ -120,8 +172,11 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		ourTexture.use();
+		ourShader.setMat4fv("transform", false ,trans);
+		ourShader.setMat4fv("iteration", false, itr);
+				
 		// render container
-		ourShader.use();
+		//ourShader.use();
 		
 		glBindVertexArray(VAO);
 		
@@ -141,3 +196,4 @@ int main(void) {
 	glfwTerminate();
 	return 0;
 }
+
