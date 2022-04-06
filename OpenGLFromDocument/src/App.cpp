@@ -172,7 +172,7 @@ int main(void) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		ourTexture.use();
-		ourShader.setMat4fv("transform", false ,trans);
+		ourShader.setMat4fv("rotation", false ,trans);
 		ourShader.setMat4fv("iteration", false, itr);
 				
 		// render container
