@@ -367,4 +367,5 @@ FodyWeavers.xsd
 *.idb
 *.ilk
 *.obj
-x64/
+x64/*
+src/x64/*
