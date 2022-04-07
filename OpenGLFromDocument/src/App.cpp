@@ -178,22 +178,40 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 	projection = glm::perspective(glm::radians(80.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
 	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
 	float x = 0.0;
 	float y = 0.0;
 
 	glEnable(GL_DEPTH_TEST);
+
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+
+	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+
+	//glm::mat4 view;
+	view = glm::lookAt(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	const float radius = 10.0f;
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+		float camX = sin(glfwGetTime()) * radius;
+		float camZ = cos(glfwGetTime()) * radius;
+
+		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0),glm::vec3(0.0, 1.0, 0.0));
+
 		determineX(window, x, y);
 
-		
-				
 		// input
 		// -----
 		processInput(window);
@@ -210,14 +228,14 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 		//ourShader.use();
 
 		glBindVertexArray(VAO);
-		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); i++) {
+		for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
 			glm::mat4 model = glm::mat4(1.0f);
-			
+
 			model = glm::translate(model, cubePositions[i]);
 			ourShader.setMat4fv("model", false, model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-	
+
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
