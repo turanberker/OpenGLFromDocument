@@ -25,11 +25,11 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 }
 
-void determineX(GLFWwindow* window, float& x , float& y) {
+void determineX(GLFWwindow* window, float& x, float& y) {
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		x -= 0.005f;
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		x +=  0.005f;
+		x += 0.005f;
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 		y += 0.005f;
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -37,14 +37,15 @@ void determineX(GLFWwindow* window, float& x , float& y) {
 
 	if (x > 0.5) {
 		x = 0.5;
-	}	else if (x < -0.5) {
+	}
+	else if (x < -0.5) {
 		x = -0.5;
 	}
 
-	if (y > 0.5) {
+	if (y > 4) {
 		y = 0.5;
 	}
-	else if (y < -0.5) {
+	else if (y < -4) {
 		y = -0.5;
 	}
 }
@@ -79,9 +80,9 @@ int main(void) {
 
 	Shader ourShader("resources/shaders/texture.vs", "resources/shaders/texture.fs");
 	Texture ourTexture(numberOfTextures);
-	ourTexture.bindTexture("resources/textures/container.jpg",false);
-	ourTexture.bindTexture("resources/textures/awesomeface.png",true);	
-	
+	ourTexture.bindTexture("resources/textures/container.jpg", false);
+	ourTexture.bindTexture("resources/textures/awesomeface.png", true);
+
 
 	float vertices[] = {
 	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -137,14 +138,14 @@ int main(void) {
 	//Copy our vertices array in a bufer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	
+
 	//set the vertex attrivbutes pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	// color attribute
 	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),(void*)(3 * sizeof(float)));
-	
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	//glEnableVertexAttribArray(2);
@@ -154,20 +155,30 @@ int main(void) {
 	ourShader.use(); // don't forget to activate/use the shader before setting uniforms!
 	// either set it manually like so:
 	for (int i = 0; i < numberOfTextures; i++) {
-		std::string texture= "texture";
-		texture = texture +std::to_string(i + 1);
+		std::string texture = "texture";
+		texture = texture + std::to_string(i + 1);
 		ourShader.setInt(texture, i);
 	}
 	// or set it via the texture class
-	
 
-	
-	glm::mat4 view = glm::mat4(1.0f);
-	// note that we’re translating the scene in the reverse direction
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-	
+	glm::vec3 cubePositions[] = {
+glm::vec3(0.0f, 0.0f, 0.0f),
+glm::vec3(2.0f, 5.0f, -15.0f),
+glm::vec3(-1.5f, -2.2f, -2.5f),
+glm::vec3(-3.8f, -2.0f, -12.3f),
+glm::vec3(2.4f, -0.4f, -3.5f),
+glm::vec3(-1.7f, 3.0f, -7.5f),
+glm::vec3(1.3f, -2.0f, -2.5f),
+glm::vec3(1.5f, 2.0f, -2.5f),
+glm::vec3(1.5f, 0.2f, -1.5f),
+glm::vec3(-1.3f, 1.0f, -1.5f)
+	};
+
 	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f,100.0f);
+	projection = glm::perspective(glm::radians(80.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
 	float x = 0.0;
 	float y = 0.0;
@@ -179,14 +190,10 @@ int main(void) {
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		determineX(window, x,y);
+		determineX(window, x, y);
+
 		
-		glm::mat4 rotate = glm::mat4(1.0f);
-		rotate = glm::rotate(rotate, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
-
-
-		glm::mat4 itr = glm::mat4(1.0f);
-		itr=glm::translate(itr, glm::vec3(x, y, 0.0f));
+				
 		// input
 		// -----
 		processInput(window);
@@ -195,19 +202,24 @@ int main(void) {
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
+
 		ourTexture.use();
-		ourShader.setMat4fv("rotation", false ,rotate);
-		ourShader.setMat4fv("iteration", false, itr);
 		ourShader.setMat4fv("view", false, view);
 		ourShader.setMat4fv("projection", false, projection);
 		// render container
 		//ourShader.use();
-		
+
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		for (unsigned int i = 0; i < sizeof(cubePositions)/sizeof(cubePositions[0]); i++) {
+			glm::mat4 model = glm::mat4(1.0f);
+			
+			model = glm::translate(model, cubePositions[i]);
+			ourShader.setMat4fv("model", false, model);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+	
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		
+
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
@@ -216,7 +228,7 @@ int main(void) {
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	
+
 
 	glfwTerminate();
 	return 0;
