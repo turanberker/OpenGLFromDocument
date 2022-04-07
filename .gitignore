@@ -368,4 +368,6 @@ FodyWeavers.xsd
 *.ilk
 *.obj
 x64/*
+x64/Debug/*
 src/x64/*
+src/x64/Debug/*
