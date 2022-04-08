@@ -43,42 +43,7 @@ void dynamicProcessInputs(GLFWwindow* window, float deltaTime) {
 		cameraPos -= glm::normalize(glm::cross(cameraFront, yukari)) * cameraSpeed;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		cameraPos += glm::normalize(glm::cross(cameraFront, yukari)) * cameraSpeed;
-	/*if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-		yaw += cameraSpeed*30;
-	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-		yaw -= cameraSpeed*30;
 
-	glm::vec3 front;
-	float radians=glm::radians(yaw);
-	front.x = cos(radians);
-	front.y = cameraFront.y;
-	front.z = sin(glm::radians(yaw));
-	cameraFront = glm::normalize(front);*/
-}
-
-void determineX(GLFWwindow* window, float& x, float& y) {
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		x -= 0.005f;
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		x += 0.005f;
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		y += 0.005f;
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		y -= 0.005f;
-
-	if (x > 0.5) {
-		x = 0.5;
-	}
-	else if (x < -0.5) {
-		x = -0.5;
-	}
-
-	if (y > 4) {
-		y = 0.5;
-	}
-	else if (y < -4) {
-		y = -0.5;
-	}
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -244,8 +209,7 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 	glm::mat4 view = glm::mat4(1.0f);
 	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
-	float x = 0.0;
-	float y = 0.0;
+
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -264,8 +228,6 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-
-		determineX(window, x, y);
 
 		// input
 		// -----
