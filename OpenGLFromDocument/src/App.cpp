@@ -13,6 +13,10 @@
 
 using namespace std;
 
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 yukari = glm::vec3(0.0f, 1.0f, 0.0f);
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -23,6 +27,18 @@ void processInput(GLFWwindow* window)
 	//esc ye basıldığında yapılacak işlem tarif edilir
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+}
+
+void dynamicProcessInputs(GLFWwindow* window, float deltaTime) {
+	const float cameraSpeed = 2.5f*deltaTime; // adjust accordingly
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, yukari)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, yukari)) * cameraSpeed;
 }
 
 void determineX(GLFWwindow* window, float& x, float& y) {
@@ -52,8 +68,6 @@ void determineX(GLFWwindow* window, float& x, float& y) {
 
 int main(void) {
 
-
-
 	const int numberOfTextures = 2;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -81,7 +95,7 @@ int main(void) {
 	Shader ourShader("resources/shaders/texture.vs", "resources/shaders/texture.fs");
 	Texture ourTexture(numberOfTextures);
 	ourTexture.bindTexture("resources/textures/container.jpg", false);
-	ourTexture.bindTexture("resources/textures/awesomeface.png", true);
+	//ourTexture.bindTexture("resources/textures/awesomeface.png", true);
 
 
 	float vertices[] = {
@@ -163,15 +177,15 @@ int main(void) {
 
 	glm::vec3 cubePositions[] = {
 glm::vec3(0.0f, 0.0f, 0.0f),
-glm::vec3(2.0f, 5.0f, -15.0f),
-glm::vec3(-1.5f, -2.2f, -2.5f),
-glm::vec3(-3.8f, -2.0f, -12.3f),
-glm::vec3(2.4f, -0.4f, -3.5f),
-glm::vec3(-1.7f, 3.0f, -7.5f),
-glm::vec3(1.3f, -2.0f, -2.5f),
-glm::vec3(1.5f, 2.0f, -2.5f),
-glm::vec3(1.5f, 0.2f, -1.5f),
-glm::vec3(-1.3f, 1.0f, -1.5f)
+//glm::vec3(2.0f, 5.0f, -15.0f),
+//glm::vec3(-1.5f, -2.2f, -2.5f),
+//glm::vec3(-3.8f, -2.0f, -12.3f),
+//glm::vec3(2.4f, -0.4f, -3.5f),
+//glm::vec3(-1.7f, 3.0f, -7.5f),
+//glm::vec3(1.3f, -2.0f, -2.5f),
+//glm::vec3(1.5f, 2.0f, -2.5f),
+//glm::vec3(1.5f, 0.2f, -1.5f),
+//glm::vec3(-1.3f, 1.0f, -1.5f)
 	};
 
 	glm::mat4 projection;
@@ -184,38 +198,39 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 	float y = 0.0;
 
 	glEnable(GL_DEPTH_TEST);
+	
 
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
 
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
 
-	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
 
-	//glm::mat4 view;
-	view = glm::lookAt(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
+	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
 	const float radius = 10.0f;
 	// render loop
 	// -----------
+
+	float deltaTime = 0.0f; // Time between current frame and last frame
+	float lastFrame = 0.0f; // Time of last fram
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-		float camX = sin(glfwGetTime()) * radius;
-		float camZ = cos(glfwGetTime()) * radius;
-
-		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0),glm::vec3(0.0, 1.0, 0.0));
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 
 		determineX(window, x, y);
 
 		// input
 		// -----
 		processInput(window);
+		dynamicProcessInputs(window, deltaTime);
+		float camX = sin(glfwGetTime()) * radius;
+		float camZ = cos(glfwGetTime()) * radius;
 
+	//	view = glm::lookAt(glm::vec3(0.0f, 0.0, 3.0f), glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, yukari);
+		
 		// render
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
