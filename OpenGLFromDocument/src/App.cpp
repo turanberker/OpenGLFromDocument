@@ -17,6 +17,10 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 yukari = glm::vec3(0.0f, 1.0f, 0.0f);
 
+float yaw = -90.0f;
+float pitch = 0.0f;
+float lastX = 400, lastY = 300;
+bool firstMouse = true;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -30,7 +34,7 @@ void processInput(GLFWwindow* window)
 }
 
 void dynamicProcessInputs(GLFWwindow* window, float deltaTime) {
-	const float cameraSpeed = 2.5f*deltaTime; // adjust accordingly
+	const float cameraSpeed = 2.5f * deltaTime; // adjust accordingly
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		cameraPos += cameraSpeed * cameraFront;
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -39,6 +43,17 @@ void dynamicProcessInputs(GLFWwindow* window, float deltaTime) {
 		cameraPos -= glm::normalize(glm::cross(cameraFront, yukari)) * cameraSpeed;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		cameraPos += glm::normalize(glm::cross(cameraFront, yukari)) * cameraSpeed;
+	/*if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+		yaw += cameraSpeed*30;
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		yaw -= cameraSpeed*30;
+
+	glm::vec3 front;
+	float radians=glm::radians(yaw);
+	front.x = cos(radians);
+	front.y = cameraFront.y;
+	front.z = sin(glm::radians(yaw));
+	cameraFront = glm::normalize(front);*/
 }
 
 void determineX(GLFWwindow* window, float& x, float& y) {
@@ -66,6 +81,37 @@ void determineX(GLFWwindow* window, float& x, float& y) {
 	}
 }
 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+	if (firstMouse) // initially set to true
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; // reversed: y ranges bottom to top
+	lastX = xpos;
+	lastY = ypos;
+	const float sensitivity = 0.1f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	yaw += xoffset;
+	pitch += yoffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cout << direction.y << endl;
+	cameraFront = glm::normalize(direction);
+}
+
 int main(void) {
 
 	const int numberOfTextures = 2;
@@ -73,13 +119,16 @@ int main(void) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+	
 	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
 	if (window == NULL) {
 		cout << "Failed to create GLFW window" << endl;
 		glfwTerminate();
 		return -1;
 	}
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouse_callback);
+
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -166,6 +215,7 @@ int main(void) {
 
 	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
 	// -------------------------------------------------------------------------------------------
+
 	ourShader.use(); // don't forget to activate/use the shader before setting uniforms!
 	// either set it manually like so:
 	for (int i = 0; i < numberOfTextures; i++) {
@@ -198,10 +248,6 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 	float y = 0.0;
 
 	glEnable(GL_DEPTH_TEST);
-	
-
-
-
 
 	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
 	const float radius = 10.0f;
@@ -228,9 +274,9 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 		float camX = sin(glfwGetTime()) * radius;
 		float camZ = cos(glfwGetTime()) * radius;
 
-	//	view = glm::lookAt(glm::vec3(0.0f, 0.0, 3.0f), glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+		//	view = glm::lookAt(glm::vec3(0.0f, 0.0, 3.0f), glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 		view = glm::lookAt(cameraPos, cameraPos + cameraFront, yukari);
-		
+
 		// render
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
