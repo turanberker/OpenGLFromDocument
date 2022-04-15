@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="..\Depandencies\GLAD\src\glad.c" />
     <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\header\Camera.cpp" />
     <ClCompile Include="src\header\Log.cpp" />
     <ClCompile Include="src\header\Shader.cpp" />
     <ClCompile Include="src\header\Texture.cpp" />
@@ -160,6 +161,7 @@
     <None Include="resources\shaders\texture.vs" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\header\Camera.h" />
     <ClInclude Include="src\header\Shader.h" />
     <ClInclude Include="src\header\stb_image.h" />
     <ClInclude Include="src\header\Log.h" />
