@@ -155,6 +155,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\openGL.pdf" />
+    <None Include="resources\shaders\lightCube.fs" />
+    <None Include="resources\shaders\lightCube.vs" />
     <None Include="resources\shaders\shader.fs" />
     <None Include="resources\shaders\shader.vs" />
     <None Include="resources\shaders\texture.fs" />

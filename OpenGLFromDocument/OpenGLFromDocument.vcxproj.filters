@@ -43,6 +43,8 @@
     <None Include="resources\shaders\shader.fs" />
     <None Include="resources\shaders\texture.fs" />
     <None Include="resources\shaders\texture.vs" />
+    <None Include="resources\shaders\lightCube.vs" />
+    <None Include="resources\shaders\lightCube.fs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\Shader.h">

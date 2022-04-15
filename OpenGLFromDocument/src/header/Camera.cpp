@@ -7,6 +7,8 @@ void Camera::ScrollCallBack(GLFWwindow* window, double xoffset, double yoffset)
 		this->fov = 1.0f;
 	if (this->fov > 45.0f)
 		this->fov = 45.0f;
+	
+	this->cameraPerspective = glm::perspective(glm::radians(this->fov), 800.0f / 600.0f, 0.1f, 100.0f);
 }
 
 void Camera::dynamicProcessInputs(GLFWwindow* window, float deltaTime)
@@ -20,22 +22,34 @@ void Camera::dynamicProcessInputs(GLFWwindow* window, float deltaTime)
 		cameraPos -= glm::normalize(glm::cross(cameraFront, yukari)) * cameraSpeed;
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		cameraPos += glm::normalize(glm::cross(cameraFront, yukari)) * cameraSpeed;
-
-	cameraPos.y = 0.0f;
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+		cameraPos += glm::normalize(yukari) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+		cameraPos -= glm::normalize(yukari) * cameraSpeed;
+	//cameraPos.y = 0.0f;
+	cameraView = glm::lookAt(cameraPos, cameraPos + cameraFront, yukari);
 }
 
-glm::mat4 Camera::CameraPerspective()
+glm::mat4& Camera::getCameraPerspective()
 {
-	return glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+	return cameraPerspective;
 }
 
-glm::mat4 Camera::getView()
+glm::mat4& Camera::getView()
 {
-	return glm::lookAt(cameraPos, cameraPos + cameraFront, yukari);
+	return cameraView;
+
+}
+
+glm::vec3& Camera::getviewPos()
+{
+	return cameraPos;
 }
 
 Camera::Camera(glm::vec3 cameraPos)
 {
+	cameraPerspective = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+	cameraView = glm::lookAt(cameraPos, cameraPos + cameraFront, yukari);
 	this->cameraPos = cameraPos;
 }
 
@@ -67,4 +81,5 @@ void Camera::MouseCallBack(GLFWwindow* window, double xpos, double ypos) {
 	direction.y = sin(glm::radians(pitch));
 	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	this->cameraFront = glm::normalize(direction);
+	cameraView = glm::lookAt(cameraPos, cameraPos + cameraFront, yukari);
 }
