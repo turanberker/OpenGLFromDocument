@@ -193,11 +193,20 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 	float lastFrame = 0.0f; // Time of last fram
 
 
-	glm::vec3 lightPos(10.2f, 1.0f, 2.0f);
+	glm::vec3 lightPos(3.0f, 2.0f, 2.0f);
 	glm::mat4 model;
 
 	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 	glm::vec3 objectColor(1.0f, 0.5f, 0.31f);
+
+	glm::vec3 ambient(1.0f, 0.5f, 0.31f);
+	glm::vec3 diffuse(1.0f, 0.5f, 0.31f);
+	glm::vec3 specular(0.5f, 0.5f, 0.5f);
+
+	glm::vec3 lightAmbient = glm::vec3(0.2f) * lightColor;
+	glm::vec3 lightDiffuse = glm::vec3(0.5f) * lightColor;
+	glm::vec3 lightSpecular= lightColor;
+	float shinines=32.0f;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -232,10 +241,19 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 		cubeShader.use();
 		cubeShader.setMat4fv("view", false, cam.getView());
 		cubeShader.setMat4fv("projection", false, cam.getCameraPerspective());
-		cubeShader.set3FVector("lightColor", lightColor);
-		cubeShader.set3FVector("objectColor", objectColor);
-		cubeShader.set3FVector("lightPos", lightPos);
+		
 		cubeShader.set3FVector("viewPos", cam.getviewPos());
+
+		cubeShader.set3FVector("material.ambient",ambient);
+		cubeShader.set3FVector("material.diffuse", diffuse);
+		cubeShader.set3FVector("material.specular", specular);
+		cubeShader.setFloat("material.shininess", shinines);
+
+		cubeShader.set3FVector("light.position", lightPos);
+		cubeShader.set3FVector("light.ambient", lightAmbient);
+		cubeShader.set3FVector("light.diffuse", lightDiffuse); // darken diffuse light a bit
+		cubeShader.set3FVector("light.specular", lightSpecular);
+
 		// render container
 
 		glBindVertexArray(VAO);
