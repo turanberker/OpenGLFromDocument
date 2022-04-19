@@ -82,80 +82,133 @@ int main(void) {
 
 
 	float vertices[] = {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, -1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, -1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
 
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-	-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-	-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,
 
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
-	 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, -1.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
-	 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f, -1.0f,  0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+	-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-	 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+	-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 
 
-	unsigned int VAO, VBO;
+	float textureCoords[] = {
+	 0.0f, 0.0f, 0.0f, 
+	 1.0f, 0.0f, 0.0f, 
+	 1.0f, 1.0f, 0.0f, 
+	 1.0f, 1.0f, 0.0f, 
+	 0.0f, 1.0f, 0.0f, 
+	 0.0f, 0.0f, 0.0f, 
+
+	 0.0f, 0.0f, 0.0f, 
+	 1.0f, 0.0f, 0.0f, 
+	 1.0f, 1.0f, 0.0f, 
+	 1.0f, 1.0f, 0.0f, 
+	 0.0f, 1.0f, 0.0f, 
+	 0.0f, 0.0f, 0.0f, 
+
+	 1.0f, 0.0f, -1.0f,
+	 1.0f, 1.0f, -1.0f,
+	 0.0f, 1.0f, -1.0f,
+	 0.0f, 1.0f, -1.0f,
+	 0.0f, 0.0f, -1.0f,
+	 1.0f, 0.0f, -1.0f,
+
+	 1.0f, 0.0f, 1.0f, 
+	 1.0f, 1.0f, 1.0f, 
+	 0.0f, 1.0f, 1.0f, 
+	 0.0f, 1.0f, 1.0f, 
+	 0.0f, 0.0f, 1.0f, 
+	 1.0f, 0.0f, 1.0f, 
+
+	 0.0f, 1.0f, 0.0f, 
+	 1.0f, 1.0f, 0.0f, 
+	 1.0f, 0.0f, 0.0f, 
+	 1.0f, 0.0f, 0.0f, 
+	 0.0f, 0.0f, 0.0f, 
+	 0.0f, 1.0f, 0.0f, 
+
+	 0.0f, 1.0f, 0.0f, 
+	 1.0f, 1.0f, 0.0f, 
+	 1.0f, 0.0f, 0.0f, 
+	 1.0f, 0.0f, 0.0f, 
+	 0.0f, 0.0f, 0.0f, 
+	 0.0f, 1.0f, 0.0f, 
+	};
+
+
+	unsigned int VAO, VBO, TB0;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 	glBindVertexArray(VAO);
 
+	
+
 	//Copy our vertices array in a bufer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		
 
 	//set the vertex attrivbutes pointers
 
 	// color attribute
 
 	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
+	//glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
+	glGenBuffers(1, &TB0);
+	glBindBuffer(GL_ARRAY_BUFFER, TB0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(textureCoords), textureCoords, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
 
 	unsigned int lightCubeVAO;
 	glGenVertexArrays(1, &lightCubeVAO);
 	glBindVertexArray(lightCubeVAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
@@ -169,15 +222,15 @@ int main(void) {
 
 	glm::vec3 cubePositions[] = {
 glm::vec3(0.0f, 0.0f, 0.0f),
-//glm::vec3(2.0f, 5.0f, -15.0f),
-//glm::vec3(-1.5f, -2.2f, -2.5f),
-//glm::vec3(-3.8f, -2.0f, -12.3f),
-//glm::vec3(2.4f, -0.4f, -3.5f),
-//glm::vec3(-1.7f, 3.0f, -7.5f),
-//glm::vec3(1.3f, -2.0f, -2.5f),
-//glm::vec3(1.5f, 2.0f, -2.5f),
-//glm::vec3(1.5f, 0.2f, -1.5f),
-//glm::vec3(-1.3f, 1.0f, -1.5f)
+glm::vec3(2.0f, 5.0f, -15.0f),
+glm::vec3(-1.5f, -2.2f, -2.5f),
+glm::vec3(-3.8f, -2.0f, -12.3f),
+glm::vec3(2.4f, -0.4f, -3.5f),
+glm::vec3(-1.7f, 3.0f, -7.5f),
+glm::vec3(1.3f, -2.0f, -2.5f),
+glm::vec3(1.5f, 2.0f, -2.5f),
+glm::vec3(1.5f, 0.2f, -1.5f),
+glm::vec3(-1.3f, 1.0f, -1.5f)
 	};
 
 
@@ -201,6 +254,7 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 
 	
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+	glm::vec3 lightDirection(-0.2f, -1.0f, -0.3f);
 	glm::vec3 lightAmbient = glm::vec3(0.2f) * lightColor;
 	glm::vec3 lightDiffuse = glm::vec3(0.5f) * lightColor;
 	glm::vec3 lightSpecular= lightColor;
@@ -246,7 +300,7 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 		cubeShader.setInt("material.specular", 1);
 		cubeShader.setInt("material.emission", 2);
 		//cubeShader.set3FVector("material.specular", objSpecular);
-		
+		cubeShader.set3FVector("light.direction", lightDirection);
 
 		cubeShader.setFloat("material.shininess", objShinines);
 
@@ -262,6 +316,8 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 			model = glm::mat4(1.0f);
 
 			model = glm::translate(model, cubePositions[i]);
+			float angle = 20.0f * i;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			cubeShader.setMat4fv("model", false, model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
