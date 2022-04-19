@@ -57,14 +57,6 @@ void Texture::use()
 		glActiveTexture(GL_TEXTURE0+i);
 		glBindTexture(GL_TEXTURE_2D, idList[i]);
 	}
-	// bind Texture
-
-//	glActiveTexture(GL_TEXTURE0 );
-//	glBindTexture(GL_TEXTURE_2D, idList[0]);
-
-//	glActiveTexture(GL_TEXTURE1);
-//	glBindTexture(GL_TEXTURE_2D, idList[1]);
-	
 }
 
 GLuint* Texture::getTexttureIdList() {

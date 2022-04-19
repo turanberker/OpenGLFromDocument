@@ -42,7 +42,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 int main(void) {
 
-	const int numberOfTextures = 2;
+	
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -73,9 +73,12 @@ int main(void) {
 
 	Shader cubeShader("resources/shaders/texture.vs", "resources/shaders/texture.fs");
 	Shader lightCubeShader("resources/shaders/lightCube.vs", "resources/shaders/lightCube.fs");
+	const int numberOfTextures = 3;
 	Texture ourTexture(numberOfTextures);
-	ourTexture.bindTexture("resources/textures/container.jpg", false);
-	//ourTexture.bindTexture("resources/textures/awesomeface.png", true);
+	ourTexture.bindTexture("resources/textures/container2.png", true);
+	ourTexture.bindTexture("resources/textures/container2_specular.png", true);
+	ourTexture.bindTexture("resources/textures/matrix.jpg", false);
+	ourTexture.use();
 
 
 	float vertices[] = {
@@ -147,7 +150,6 @@ int main(void) {
 	glEnableVertexAttribArray(2);
 
 
-
 	unsigned int lightCubeVAO;
 	glGenVertexArrays(1, &lightCubeVAO);
 	glBindVertexArray(lightCubeVAO);
@@ -161,11 +163,8 @@ int main(void) {
 
 	cubeShader.use(); // don't forget to activate/use the shader before setting uniforms!
 	// either set it manually like so:
-	for (int i = 0; i < numberOfTextures; i++) {
-		std::string texture = "texture";
-		texture = texture + std::to_string(i + 1);
-		cubeShader.setInt(texture, i);
-	}
+	
+	
 	// or set it via the texture class
 
 	glm::vec3 cubePositions[] = {
@@ -193,20 +192,19 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 	float lastFrame = 0.0f; // Time of last fram
 
 
-	glm::vec3 lightPos(3.0f, 2.0f, 2.0f);
+
 	glm::mat4 model;
-
 	glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-	glm::vec3 objectColor(1.0f, 0.5f, 0.31f);
 
-	glm::vec3 ambient(1.0f, 0.5f, 0.31f);
-	glm::vec3 diffuse(1.0f, 0.5f, 0.31f);
-	glm::vec3 specular(0.5f, 0.5f, 0.5f);
+	glm::vec3 objSpecular = glm::vec3(0.5f) * lightColor;
+	float objShinines = 32.0f;
 
+	
+	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 	glm::vec3 lightAmbient = glm::vec3(0.2f) * lightColor;
 	glm::vec3 lightDiffuse = glm::vec3(0.5f) * lightColor;
 	glm::vec3 lightSpecular= lightColor;
-	float shinines=32.0f;
+	
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -244,10 +242,13 @@ glm::vec3(0.0f, 0.0f, 0.0f),
 		
 		cubeShader.set3FVector("viewPos", cam.getviewPos());
 
-		cubeShader.set3FVector("material.ambient",ambient);
-		cubeShader.set3FVector("material.diffuse", diffuse);
-		cubeShader.set3FVector("material.specular", specular);
-		cubeShader.setFloat("material.shininess", shinines);
+		cubeShader.setInt("material.diffuse", 0);
+		cubeShader.setInt("material.specular", 1);
+		cubeShader.setInt("material.emission", 2);
+		//cubeShader.set3FVector("material.specular", objSpecular);
+		
+
+		cubeShader.setFloat("material.shininess", objShinines);
 
 		cubeShader.set3FVector("light.position", lightPos);
 		cubeShader.set3FVector("light.ambient", lightAmbient);
