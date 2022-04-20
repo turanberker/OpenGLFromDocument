@@ -71,7 +71,7 @@ int main(void) {
 	//Window her resize olduğunda aşağıdaki fonksiyon çağrılacaktır
 
 
-	Shader cubeShader("resources/shaders/texture.vs", "resources/shaders/texture.fs");
+	Shader lightingShader("resources/shaders/texture.vs", "resources/shaders/texture.fs");
 	Shader lightCubeShader("resources/shaders/lightCube.vs", "resources/shaders/lightCube.fs");
 	const int numberOfTextures = 3;
 	Texture ourTexture(numberOfTextures);
@@ -214,7 +214,7 @@ int main(void) {
 	// tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
 	// -------------------------------------------------------------------------------------------
 
-	cubeShader.use(); // don't forget to activate/use the shader before setting uniforms!
+	lightingShader.use(); // don't forget to activate/use the shader before setting uniforms!
 	// either set it manually like so:
 	
 	
@@ -254,7 +254,7 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 
 	
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-	glm::vec3 lightDirection(-0.2f, -1.0f, -0.3f);
+	
 	glm::vec3 lightAmbient = glm::vec3(0.2f) * lightColor;
 	glm::vec3 lightDiffuse = glm::vec3(0.5f) * lightColor;
 	glm::vec3 lightSpecular= lightColor;
@@ -287,27 +287,33 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 		lightCubeShader.set3FVector("lightColor", lightColor);
 		lightCubeShader.setMat4fv("view", false, cam.getView());
 		lightCubeShader.setMat4fv("projection", false, cam.getCameraPerspective());
+	
+
 		glBindVertexArray(lightCubeVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		cubeShader.use();
-		cubeShader.setMat4fv("view", false, cam.getView());
-		cubeShader.setMat4fv("projection", false, cam.getCameraPerspective());
+		lightingShader.use();
+		lightingShader.setMat4fv("view", false, cam.getView());
+		lightingShader.setMat4fv("projection", false, cam.getCameraPerspective());
 		
-		cubeShader.set3FVector("viewPos", cam.getviewPos());
-
-		cubeShader.setInt("material.diffuse", 0);
-		cubeShader.setInt("material.specular", 1);
-		cubeShader.setInt("material.emission", 2);
+		lightingShader.set3FVector("viewPos", cam.getviewPos());
+		lightingShader.setInt("material.diffuse", 0);
+		lightingShader.setInt("material.specular", 1);
+		lightingShader.setInt("material.emission", 2);
+		lightingShader.setFloat("light.constant", 1.0f);
+		lightingShader.setFloat("light.linear", 0.09f);
+		lightingShader.setFloat("light.quadratic", 0.032f);
+		lightingShader.set3FVector("light.position", cam.getviewPos());
 		//cubeShader.set3FVector("material.specular", objSpecular);
-		cubeShader.set3FVector("light.direction", lightDirection);
+		lightingShader.set3FVector("light.direction", cam.getCamFront());
+		lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
 
-		cubeShader.setFloat("material.shininess", objShinines);
+		lightingShader.setFloat("material.shininess", objShinines);
 
-		cubeShader.set3FVector("light.position", lightPos);
-		cubeShader.set3FVector("light.ambient", lightAmbient);
-		cubeShader.set3FVector("light.diffuse", lightDiffuse); // darken diffuse light a bit
-		cubeShader.set3FVector("light.specular", lightSpecular);
+		//lightingShader.set3FVector("light.position", lightPos);
+		lightingShader.set3FVector("light.ambient", lightAmbient);
+		lightingShader.set3FVector("light.diffuse", lightDiffuse); // darken diffuse light a bit
+		lightingShader.set3FVector("light.specular", lightSpecular);
 
 		// render container
 
@@ -318,7 +324,7 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 			model = glm::translate(model, cubePositions[i]);
 			float angle = 20.0f * i;
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			cubeShader.setMat4fv("model", false, model);
+			lightingShader.setMat4fv("model", false, model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
