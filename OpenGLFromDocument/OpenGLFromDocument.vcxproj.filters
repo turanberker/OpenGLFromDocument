@@ -30,10 +30,10 @@
     <ClCompile Include="src\header\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\header\Shader.cpp">
+    <ClCompile Include="src\header\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\header\Camera.cpp">
+    <ClCompile Include="src\header\Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

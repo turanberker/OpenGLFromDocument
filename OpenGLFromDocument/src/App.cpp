@@ -73,11 +73,11 @@ int main(void) {
 
 	Shader lightingShader("resources/shaders/texture.vs", "resources/shaders/texture.fs");
 	Shader lightCubeShader("resources/shaders/lightCube.vs", "resources/shaders/lightCube.fs");
-	const int numberOfTextures = 3;
+	const int numberOfTextures = 2;
 	Texture ourTexture(numberOfTextures);
 	ourTexture.bindTexture("resources/textures/container2.png", true);
 	ourTexture.bindTexture("resources/textures/container2_specular.png", true);
-	ourTexture.bindTexture("resources/textures/matrix.jpg", false);
+	//ourTexture.bindTexture("resources/textures/matrix.jpg", false);
 	ourTexture.use();
 
 
@@ -307,6 +307,7 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 		//cubeShader.set3FVector("material.specular", objSpecular);
 		lightingShader.set3FVector("light.direction", cam.getCamFront());
 		lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+		lightingShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
 
 		lightingShader.setFloat("material.shininess", objShinines);
 
