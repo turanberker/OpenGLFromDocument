@@ -4,8 +4,14 @@ D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(6,10
 D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
 D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(12,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(265,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(276,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(277,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(300,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(311,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(312,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(358,159): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(358,121): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(358,83): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(359,159): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(359,121): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\work\workspaces\opengl\OpenGLFromDocument\OpenGLFromDocument\src\App.cpp(359,83): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   OpenGLFromDocument.vcxproj -> D:\work\workspaces\opengl\OpenGLFromDocument\x64\Debug\OpenGLFromDocument.exe

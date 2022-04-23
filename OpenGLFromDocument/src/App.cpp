@@ -14,7 +14,19 @@
 
 using namespace std;
 
+struct PointLight
+{
+	glm::vec3 position;
+	glm::vec3 color;
+};
+
 Camera cam(glm::vec3(0.0f, 0.0f, 3.0f));
+
+
+const glm::vec3 flashOnLightColor(1.0f, 1.0f, 1.0f);
+const glm::vec3 flashOffLightColor(0.0f, 0.0f, 0.0f);
+
+glm::vec3 flashLightColor = flashOnLightColor;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -32,6 +44,14 @@ void processInput(GLFWwindow* window)
 	//esc ye basıldığında yapılacak işlem tarif edilir
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+		if (flashLightColor == flashOffLightColor) {
+			flashLightColor = flashOnLightColor;
+		}else {
+			flashLightColor = flashOffLightColor;
+		}
+	}
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -42,7 +62,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 int main(void) {
 
-	
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -127,19 +147,19 @@ int main(void) {
 
 
 	float textureCoords[] = {
-	 0.0f, 0.0f, 0.0f, 
-	 1.0f, 0.0f, 0.0f, 
-	 1.0f, 1.0f, 0.0f, 
-	 1.0f, 1.0f, 0.0f, 
-	 0.0f, 1.0f, 0.0f, 
-	 0.0f, 0.0f, 0.0f, 
+	 0.0f, 0.0f, 0.0f,
+	 1.0f, 0.0f, 0.0f,
+	 1.0f, 1.0f, 0.0f,
+	 1.0f, 1.0f, 0.0f,
+	 0.0f, 1.0f, 0.0f,
+	 0.0f, 0.0f, 0.0f,
 
-	 0.0f, 0.0f, 0.0f, 
-	 1.0f, 0.0f, 0.0f, 
-	 1.0f, 1.0f, 0.0f, 
-	 1.0f, 1.0f, 0.0f, 
-	 0.0f, 1.0f, 0.0f, 
-	 0.0f, 0.0f, 0.0f, 
+	 0.0f, 0.0f, 0.0f,
+	 1.0f, 0.0f, 0.0f,
+	 1.0f, 1.0f, 0.0f,
+	 1.0f, 1.0f, 0.0f,
+	 0.0f, 1.0f, 0.0f,
+	 0.0f, 0.0f, 0.0f,
 
 	 1.0f, 0.0f, -1.0f,
 	 1.0f, 1.0f, -1.0f,
@@ -148,28 +168,42 @@ int main(void) {
 	 0.0f, 0.0f, -1.0f,
 	 1.0f, 0.0f, -1.0f,
 
-	 1.0f, 0.0f, 1.0f, 
-	 1.0f, 1.0f, 1.0f, 
-	 0.0f, 1.0f, 1.0f, 
-	 0.0f, 1.0f, 1.0f, 
-	 0.0f, 0.0f, 1.0f, 
-	 1.0f, 0.0f, 1.0f, 
+	 1.0f, 0.0f, 1.0f,
+	 1.0f, 1.0f, 1.0f,
+	 0.0f, 1.0f, 1.0f,
+	 0.0f, 1.0f, 1.0f,
+	 0.0f, 0.0f, 1.0f,
+	 1.0f, 0.0f, 1.0f,
 
-	 0.0f, 1.0f, 0.0f, 
-	 1.0f, 1.0f, 0.0f, 
-	 1.0f, 0.0f, 0.0f, 
-	 1.0f, 0.0f, 0.0f, 
-	 0.0f, 0.0f, 0.0f, 
-	 0.0f, 1.0f, 0.0f, 
+	 0.0f, 1.0f, 0.0f,
+	 1.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f, 0.0f,
+	 1.0f, 0.0f, 0.0f,
+	 0.0f, 0.0f, 0.0f,
+	 0.0f, 1.0f, 0.0f,
 
-	 0.0f, 1.0f, 0.0f, 
-	 1.0f, 1.0f, 0.0f, 
-	 1.0f, 0.0f, 0.0f, 
-	 1.0f, 0.0f, 0.0f, 
-	 0.0f, 0.0f, 0.0f, 
-	 0.0f, 1.0f, 0.0f, 
+	 0.0f, 1.0f, 0.0f,
+	 1.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f, 0.0f,
+	 1.0f, 0.0f, 0.0f,
+	 0.0f, 0.0f, 0.0f,
+	 0.0f, 1.0f, 0.0f,
 	};
 
+
+	PointLight p1, p2, p3, p4;
+	p1.position = glm::vec3(0.7f, 0.2f, 2.0f);
+	p1.color = glm::vec3(1.0f, 0.0f, 0.0f);
+	p2.position = glm::vec3(2.3f, -3.3f, -4.0f);
+	p2.color = glm::vec3(0.0f, 1.0f, 0.0f);
+	p3.position = glm::vec3(-4.0f, 2.0f, -12.0f);
+	p3.color = glm::vec3(0.0f, 0.0f, 1.0f);
+	p4.position = glm::vec3(0.0f, 0.0f, -3.0f);
+	p4.color = glm::vec3(1.0f, 1.0f, 0.0f);
+
+
+	PointLight pointLightPositions[] = { p1,p2,p3,p4
+	};
 
 	unsigned int VAO, VBO, TB0;
 	glGenVertexArrays(1, &VAO);
@@ -177,12 +211,12 @@ int main(void) {
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 	glBindVertexArray(VAO);
 
-	
+
 
 	//Copy our vertices array in a bufer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		
+
 
 	//set the vertex attrivbutes pointers
 
@@ -216,8 +250,8 @@ int main(void) {
 
 	lightingShader.use(); // don't forget to activate/use the shader before setting uniforms!
 	// either set it manually like so:
-	
-	
+
+
 	// or set it via the texture class
 
 	glm::vec3 cubePositions[] = {
@@ -252,13 +286,13 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 	glm::vec3 objSpecular = glm::vec3(0.5f) * lightColor;
 	float objShinines = 32.0f;
 
-	
+
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-	
+
 	glm::vec3 lightAmbient = glm::vec3(0.2f) * lightColor;
 	glm::vec3 lightDiffuse = glm::vec3(0.5f) * lightColor;
-	glm::vec3 lightSpecular= lightColor;
-	
+	glm::vec3 lightSpecular = lightColor;
+
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -278,45 +312,63 @@ glm::vec3(-1.3f, 1.0f, -1.5f)
 
 
 		//light Source
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+
 		lightCubeShader.use();
 
-		lightCubeShader.setMat4fv("model", false, model);
-		lightCubeShader.set3FVector("lightColor", lightColor);
+
+
 		lightCubeShader.setMat4fv("view", false, cam.getView());
 		lightCubeShader.setMat4fv("projection", false, cam.getCameraPerspective());
-	
+
 
 		glBindVertexArray(lightCubeVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		for (int i = 0; i < sizeof(pointLightPositions) / sizeof(pointLightPositions[0]); i++) {
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, pointLightPositions[i].position);
+			model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+			lightCubeShader.setMat4fv("model", false, model);
+			lightCubeShader.set3FVector("lightColor", pointLightPositions[i].color);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 
 		lightingShader.use();
 		lightingShader.setMat4fv("view", false, cam.getView());
 		lightingShader.setMat4fv("projection", false, cam.getCameraPerspective());
-		
+
 		lightingShader.set3FVector("viewPos", cam.getviewPos());
+
 		lightingShader.setInt("material.diffuse", 0);
 		lightingShader.setInt("material.specular", 1);
 		lightingShader.setInt("material.emission", 2);
-		lightingShader.setFloat("light.constant", 1.0f);
-		lightingShader.setFloat("light.linear", 0.09f);
-		lightingShader.setFloat("light.quadratic", 0.032f);
-		lightingShader.set3FVector("light.position", cam.getviewPos());
-		//cubeShader.set3FVector("material.specular", objSpecular);
-		lightingShader.set3FVector("light.direction", cam.getCamFront());
-		lightingShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-		lightingShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
-
 		lightingShader.setFloat("material.shininess", objShinines);
 
-		//lightingShader.set3FVector("light.position", lightPos);
-		lightingShader.set3FVector("light.ambient", lightAmbient);
-		lightingShader.set3FVector("light.diffuse", lightDiffuse); // darken diffuse light a bit
-		lightingShader.set3FVector("light.specular", lightSpecular);
+		lightingShader.set3FVector("dirLight.direction", -0.2f, -1.0f, -0.3f);
+		lightingShader.set3FVector("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+		lightingShader.set3FVector("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+		lightingShader.set3FVector("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
-		// render container
+		for (int i = 0; i < sizeof(pointLightPositions) / sizeof(pointLightPositions[0]); i++) {
+
+			auto result = "pointLights[" + std::to_string(i) + "]";
+			lightingShader.set3FVector(result + ".position", pointLightPositions[i].position);
+			lightingShader.setFloat(result + ".constant", 1.0f);
+			lightingShader.setFloat(result + ".linear", 0.09f);
+			lightingShader.setFloat(result + ".quadratic", 0.032f);
+			lightingShader.set3FVector(result + ".ambient", pointLightPositions[i].color.x * 0.0, pointLightPositions[i].color.y * 0.0, pointLightPositions[i].color.z * 0.0);
+			lightingShader.set3FVector(result + ".diffuse", pointLightPositions[i].color.x * 0.5, pointLightPositions[i].color.y * 0.5, pointLightPositions[i].color.z * 0.5); // darken diffuse light a bit
+			lightingShader.set3FVector(result + ".specular", pointLightPositions[i].color);
+		}
+
+		lightingShader.set3FVector("flashLight.position", cam.getviewPos());
+		lightingShader.set3FVector("flashLight.direction", cam.getCamFront());
+		lightingShader.set3FVector("flashLight.ambient", 0.0f, 0.0f, 0.0f);
+		lightingShader.set3FVector("flashLight.diffuse", flashLightColor);
+		lightingShader.set3FVector("flashLight.specular", flashLightColor);
+		lightingShader.setFloat("flashLight.constant", 1.0f);
+		lightingShader.setFloat("flashLight.linear", 0.09f);
+		lightingShader.setFloat("flashLight.quadratic", 0.032f);
+		lightingShader.setFloat("flashLight.cutOff", glm::cos(glm::radians(12.5f)));
+		lightingShader.setFloat("flashLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
 		glBindVertexArray(VAO);
 		for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
