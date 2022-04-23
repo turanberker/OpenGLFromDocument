@@ -46,6 +46,11 @@ glm::vec3& Camera::getviewPos()
 	return cameraPos;
 }
 
+glm::vec3& Camera::getCamFront()
+{
+	return cameraFront;
+}
+
 Camera::Camera(glm::vec3 cameraPos)
 {
 	cameraPerspective = glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);

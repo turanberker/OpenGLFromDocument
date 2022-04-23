@@ -26,4 +26,5 @@ public:
 	glm::mat4& getCameraPerspective();
 	glm::mat4& getView();
 	glm::vec3& getviewPos();
+	glm::vec3& getCamFront();
 };
