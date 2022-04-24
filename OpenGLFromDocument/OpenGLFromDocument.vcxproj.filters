@@ -45,6 +45,8 @@
     <None Include="resources\shaders\texture.vs" />
     <None Include="resources\shaders\lightCube.vs" />
     <None Include="resources\shaders\lightCube.fs" />
+    <None Include="resources\shaders\depthtest\depth_testing.vs" />
+    <None Include="resources\shaders\depthtest\depth_testing.fs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\Shader.h">
@@ -83,6 +85,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\textures\matrix.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\marble.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\metal.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
