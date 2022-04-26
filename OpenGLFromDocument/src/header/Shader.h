@@ -26,6 +26,6 @@ public:
 	void set3FVector(const std::string& name, glm::vec3& vec) const;
 	void set3FVector(const std::string& name, float x, float y, float z ) const;
 	void setMat4fv(const std::string& name, bool  transposeMatrix, glm::mat4& mat4) const;
-	void setMat4fv(const std::string& name,  glm::mat4& mat4) const;
+	void setMat4fv(const std::string& name, glm::mat4& mat4) const;
 };
 #endif
