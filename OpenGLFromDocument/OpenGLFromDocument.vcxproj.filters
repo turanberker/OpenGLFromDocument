@@ -48,6 +48,7 @@
     <None Include="resources\shaders\depthtest\depth_testing.vs" />
     <None Include="resources\shaders\depthtest\depth_testing.fs" />
     <None Include="resources\shaders\depthtest\singleColor.fs" />
+    <None Include="resources\shaders\depthtest\blender.fs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\Shader.h">
@@ -92,6 +93,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\textures\metal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\grass.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

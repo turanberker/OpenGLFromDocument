@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\openGL.pdf" />
+    <None Include="resources\shaders\depthtest\blender.fs" />
     <None Include="resources\shaders\depthtest\depth_testing.fs" />
     <None Include="resources\shaders\depthtest\depth_testing.vs" />
     <None Include="resources\shaders\depthtest\singleColor.fs" />
@@ -178,6 +179,7 @@
     <Image Include="resources\textures\container.jpg" />
     <Image Include="resources\textures\container2.png" />
     <Image Include="resources\textures\container2_specular.png" />
+    <Image Include="resources\textures\grass.png" />
     <Image Include="resources\textures\leopard.png" />
     <Image Include="resources\textures\marble.jpg" />
     <Image Include="resources\textures\matrix.jpg" />

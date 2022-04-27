@@ -1,5 +1,6 @@
 ﻿
 #include <iostream>
+#include <vector>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <string>
@@ -8,11 +9,12 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+
 #include "header/stb_image.h";
 #include "header/Texture.h";
 #include "header/Camera.h"
 
-using namespace std;
+
 
 struct PointLight
 {
@@ -77,7 +79,7 @@ int main(void) {
 
 	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
 	if (window == NULL) {
-		cout << "Failed to create GLFW window" << endl;
+		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
@@ -100,9 +102,11 @@ int main(void) {
 
 	Shader shader("resources/shaders/depthtest/depth_testing.vs", "resources/shaders/depthtest/depth_testing.fs");
 	Shader singleColorShader("resources/shaders/depthtest/depth_testing.vs", "resources/shaders/depthtest/singleColor.fs");
+	Shader blenderColorShader("resources/shaders/depthtest/depth_testing.vs", "resources/shaders/depthtest/blender.fs");
 	
 	unsigned int cubeTexture=loadTexture("resources/textures/marble.jpg");
 	unsigned int floorTexture = loadTexture("resources/textures/metal.png");
+	unsigned int grassTexture = loadTexture("resources/textures/grass.png");
 	
 	float cubeVertices[] = {
 		// positions          // texture Coords
@@ -159,6 +163,27 @@ int main(void) {
 		 5.0f, -0.5f, -5.0f,  2.0f, 2.0f
 	};
 
+	float transparentVertices[] = {
+		// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+		0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+		1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+		1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+	};
+	
+
+	std::vector<glm::vec3> vegetation
+	{
+		glm::vec3(-1.5f, 0.0f, -0.48f),
+		glm::vec3(1.5f, 0.0f, 0.51f),
+		glm::vec3(0.0f, 0.0f, 0.7f),
+		glm::vec3(-0.3f, 0.0f, -2.3f),
+		glm::vec3(0.5f, 0.0f, -0.6f)
+	};
+
 
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
@@ -184,6 +209,19 @@ int main(void) {
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glBindVertexArray(0);
+	//transparent
+	unsigned int transparentVAO, transparentVBO;
+	glGenVertexArrays(1, &transparentVAO);
+	glGenBuffers(1, &transparentVBO);
+	glBindVertexArray(transparentVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), &transparentVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glBindVertexArray(0);
+
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -211,6 +249,10 @@ int main(void) {
 		glm::mat4 view = cam.getView();
 		glm::mat4 projection = cam.getCameraPerspective();
 
+		blenderColorShader.use();
+		blenderColorShader.setMat4fv("view", view);
+		blenderColorShader.setMat4fv("projection", projection);
+
 		singleColorShader.use();
 		singleColorShader.setMat4fv("view", view);
 		singleColorShader.setMat4fv("projection", projection);
@@ -218,7 +260,8 @@ int main(void) {
 		shader.use();		
 		shader.setMat4fv("view", view);
 		shader.setMat4fv("projection",  projection);
-	 	
+
+		
 		glStencilMask(0x00);//bundan sonraki satırları çizerken stencil buffer ı değiştirme
 		drawFloor(planeVAO, floorTexture, shader);
 		
@@ -226,8 +269,21 @@ int main(void) {
 
 		glStencilMask(0xFF);//bundan sonraki satırları çizerken stencil bufferı değiştir
 		drawCubes(cubeVAO, cubeTexture, shader);
-		
 
+	
+
+		blenderColorShader.use();
+		glm::mat4 model = glm::mat4(1.0f);
+		glBindVertexArray(transparentVAO);
+		glBindTexture(GL_TEXTURE_2D, grassTexture);
+		for (unsigned int i = 0; i < vegetation.size(); i++)
+		{
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, vegetation[i]);
+			blenderColorShader.setMat4fv("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
+		
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
@@ -236,7 +292,7 @@ int main(void) {
 		//// cubes
 		glBindVertexArray(cubeVAO);
 		glBindTexture(GL_TEXTURE_2D, cubeTexture);
-		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
 		model = glm::scale(model, glm::vec3(scale, scale, scale));
 		singleColorShader.setMat4fv("model", model);
@@ -250,6 +306,8 @@ int main(void) {
 		glStencilMask(0xFF);
 		glStencilFunc(GL_ALWAYS, 0, 0xFF);
 		glEnable(GL_DEPTH_TEST);
+
+	
 
 		glBindVertexArray(0);
 
