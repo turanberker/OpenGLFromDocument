@@ -33,6 +33,10 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 unsigned int loadTexture(const char* path);
 
+void drawFloor(unsigned int& planeVAO, unsigned int& floorTexture, Shader& shader);
+
+void drawCubes(unsigned int& cubeVAO, unsigned int& cubeTexture, Shader& shader);
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -95,6 +99,7 @@ int main(void) {
 
 
 	Shader shader("resources/shaders/depthtest/depth_testing.vs", "resources/shaders/depthtest/depth_testing.fs");
+	Shader singleColorShader("resources/shaders/depthtest/depth_testing.vs", "resources/shaders/depthtest/singleColor.fs");
 	
 	unsigned int cubeTexture=loadTexture("resources/textures/marble.jpg");
 	unsigned int floorTexture = loadTexture("resources/textures/metal.png");
@@ -183,6 +188,10 @@ int main(void) {
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+
+	glEnable(GL_STENCIL_TEST);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
@@ -193,37 +202,55 @@ int main(void) {
 	   // -----
 		processInput(window);
 
+		
 		// render
 		// ------
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-		shader.use();
-		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = cam.getView();
 		glm::mat4 projection = cam.getCameraPerspective();
+
+		singleColorShader.use();
+		singleColorShader.setMat4fv("view", view);
+		singleColorShader.setMat4fv("projection", projection);
+
+		shader.use();		
 		shader.setMat4fv("view", view);
-		shader.setMat4fv("projection", false,projection);
-		// cubes
+		shader.setMat4fv("projection",  projection);
+	 	
+		glStencilMask(0x00);//bundan sonraki satırları çizerken stencil buffer ı değiştirme
+		drawFloor(planeVAO, floorTexture, shader);
+		
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+
+		glStencilMask(0xFF);//bundan sonraki satırları çizerken stencil bufferı değiştir
+		drawCubes(cubeVAO, cubeTexture, shader);
+		
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+		singleColorShader.use();
+		float scale = 1.05f;
+		//// cubes
 		glBindVertexArray(cubeVAO);
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, cubeTexture);
-		
+		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-		shader.setMat4fv("model",model);
+		model = glm::scale(model, glm::vec3(scale, scale, scale));
+		singleColorShader.setMat4fv("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-		shader.setMat4fv("model", model);
+		model = glm::scale(model, glm::vec3(scale, scale, scale));
+		singleColorShader.setMat4fv("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// floor
-		glBindVertexArray(planeVAO);
-		glBindTexture(GL_TEXTURE_2D, floorTexture);
+		glBindVertexArray(0);
+		glStencilMask(0xFF);
+		glStencilFunc(GL_ALWAYS, 0, 0xFF);
+		glEnable(GL_DEPTH_TEST);
 
-		glm::mat4 test(1.0f);
-		shader.setMat4fv("model", test);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -242,6 +269,32 @@ int main(void) {
 	return 0;
 }
 
+void drawCubes(unsigned int& cubeVAO, unsigned int& cubeTexture, Shader& shader) {
+	
+	glm::mat4 model = glm::mat4(1.0f);
+	// cubes		
+	glBindVertexArray(cubeVAO);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, cubeTexture);
+
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+	shader.setMat4fv("model", model);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+	shader.setMat4fv("model", model);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void drawFloor(unsigned int &planeVAO,unsigned int &floorTexture,Shader &shader) {
+	glBindVertexArray(planeVAO);
+	glBindTexture(GL_TEXTURE_2D, floorTexture);
+
+	glm::mat4 test(1.0f);
+	shader.setMat4fv("model", test);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
 
 unsigned int loadTexture(char const* path)
 {
